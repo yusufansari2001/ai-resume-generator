@@ -126,38 +126,7 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="footer p-10 bg-base-200 text-base-content">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-              <h4 className="footer-title">AI Resume Maker</h4>
-              <p>Your go-to tool for creating professional resumes with AI.</p>
-            </div>
-            <div>
-              <h4 className="footer-title">Quick Links</h4>
-              <a href="#" className="link link-hover">
-                About Us
-              </a>
-              <a href="#" className="link link-hover">
-                Features
-              </a>
-              <a href="#" className="link link-hover">
-                Contact
-              </a>
-            </div>
-            <div>
-              <h4 className="footer-title">Legal</h4>
-              <a href="#" className="link link-hover">
-                Privacy Policy
-              </a>
-              <a href="#" className="link link-hover">
-                Terms of Service
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
+      
     </div>
   );
 };

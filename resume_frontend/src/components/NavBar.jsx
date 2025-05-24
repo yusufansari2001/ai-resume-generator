@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom"; // Fixed import from 'react-router' to 'react-router-dom'
+import { Link } from "react-router-dom";
 
 function NavBar() {
   const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "dark");
@@ -15,6 +15,7 @@ function NavBar() {
 
   return (
     <div className="navbar shadow bg-base-100 shadow-sm">
+      {/* Left side - Logo */}
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -47,15 +48,18 @@ function NavBar() {
         </Link>
       </div>
 
-      <div className="navbar-center hidden lg:flex">
-        <ul className="menu menu-horizontal px-1">
-          <li><Link to={"/about"}>About</Link></li>
-          <li><Link to={"/services"}>Services</Link></li>
-          <li><Link to={"/contact"}>Contact</Link></li>
-        </ul>
-      </div>
-
+      {/* Right side - Navigation links and theme toggle */}
       <div className="navbar-end">
+        {/* Desktop Navigation */}
+        <div className="hidden lg:flex">
+          <ul className="menu menu-horizontal px-1">
+            <li><Link to={"/about"}>About</Link></li>
+            <li><Link to={"/services"}>Services</Link></li>
+            <li><Link to={"/contact"}>Contact</Link></li>
+          </ul>
+        </div>
+
+        {/* Theme Toggle */}
         <button className="btn btn-ghost" onClick={toggleTheme}>
           {theme === "dark" ? "🌞 Light" : "🌙 Dark"}
         </button>

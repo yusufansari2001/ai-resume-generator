@@ -1,10 +1,8 @@
 import React from "react";
-
 import { FaGithub, FaLinkedin, FaPhone, FaEnvelope } from "react-icons/fa";
 import { toPng } from "html-to-image";
 import { jsPDF } from "jspdf";
 import { useRef } from "react";
-import { useReactToPrint } from "react-to-print";
 
 const Resume = ({ data }) => {
   const resumeRef = useRef(null);
@@ -20,47 +18,48 @@ const Resume = ({ data }) => {
         console.error("Error generating PDF", err);
       });
   };
+
   return (
     <>
       <div
         ref={resumeRef}
-        className="max-w-4xl  mx-auto shadow-2xl rounded-lg p-8 space-y-6 bg-base-100 text-base-content border border-gray-200 dark:border-gray-700 transition-all duration-300"
+        className="max-w-4xl mx-auto p-8 space-y-6 bg-white text-black"
       >
         {/* Header Section */}
-        <div className="text-center space-y-2">
-          <h1 className="text-4xl font-bold text-primary">
+        <div className="text-center space-y-2 border-b border-gray-300 pb-4">
+          <h1 className="text-3xl font-bold uppercase">
             {data.personalInformation.fullName}
           </h1>
-          <p className="text-lg text-gray-500">
+          <p className="text-sm text-gray-600">
             {data.personalInformation.location}
           </p>
 
-          <div className="flex justify-center space-x-4 mt-2">
+          <div className="flex justify-center space-x-4 mt-2 text-sm">
             {data.personalInformation.email && (
               <a
                 href={`mailto:${data.personalInformation.email}`}
-                className="flex items-center text-secondary hover:underline"
+                className="flex items-center text-gray-700 hover:underline"
               >
-                <FaEnvelope className="mr-2" /> {data.personalInformation.email}
+                <FaEnvelope className="mr-1" /> {data.personalInformation.email}
               </a>
             )}
             {data.personalInformation.phoneNumber && (
-              <p className="flex items-center text-gray-500">
-                <FaPhone className="mr-2" />{" "}
+              <p className="flex items-center text-gray-700">
+                <FaPhone className="mr-1" />{" "}
                 {data.personalInformation.phoneNumber}
               </p>
             )}
           </div>
 
-          <div className="flex justify-center space-x-4 mt-2">
+          <div className="flex justify-center space-x-4 mt-2 text-sm">
             {data.personalInformation.gitHub && (
               <a
                 href={data.personalInformation.gitHub}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-500 hover:text-gray-700 flex items-center"
+                className="text-gray-700 hover:underline flex items-center"
               >
-                <FaGithub className="mr-2" /> GitHub
+                <FaGithub className="mr-1" /> GitHub
               </a>
             )}
             {data.personalInformation.linkedIn && (
@@ -68,184 +67,155 @@ const Resume = ({ data }) => {
                 href={data.personalInformation.linkedIn}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-500 hover:text-blue-700 flex items-center"
+                className="text-gray-700 hover:underline flex items-center"
               >
-                <FaLinkedin className="mr-2" /> LinkedIn
+                <FaLinkedin className="mr-1" /> LinkedIn
               </a>
             )}
           </div>
         </div>
 
-        <div className="divider"></div>
-
         {/* Summary Section */}
-        <section>
-          <h2 className="text-2xl font-semibold text-secondary">Summary</h2>
-          <p className="text-gray-700 dark:text-gray-300">{data.summary}</p>
+        <section className="mt-4">
+          <h2 className="text-xl font-semibold uppercase border-b border-gray-300 pb-1">
+            Summary
+          </h2>
+          <p className="text-gray-700 mt-2 text-sm">{data.summary}</p>
         </section>
 
-        <div className="divider"></div>
-
         {/* Skills Section */}
-        <section>
-          <h2 className="text-2xl font-semibold text-secondary">Skills</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-2">
+        <section className="mt-4">
+          <h2 className="text-xl font-semibold uppercase border-b border-gray-300 pb-1">
+            Skills
+          </h2>
+          <div className="flex flex-wrap gap-2 mt-2">
             {data.skills.map((skill, index) => (
               <div
                 key={index}
-                className="badge badge-outline badge-lg px-4 py-2"
+                className="inline-block bg-gray-100 text-gray-800 rounded px-2 py-1 text-xs font-medium whitespace-nowrap"
               >
-                {skill.title} -{" "}
-                <span className="ml-1 font-semibold">{skill.level}</span>
+                {skill.title}
               </div>
             ))}
           </div>
         </section>
 
-        <div className="divider"></div>
-
         {/* Experience Section */}
-        <section>
-          <h2 className="text-2xl font-semibold text-secondary">Experience</h2>
+        <section className="mt-4">
+          <h2 className="text-xl font-semibold uppercase border-b border-gray-300 pb-1">
+            Experience
+          </h2>
           {data.experience.map((exp, index) => (
-            <div
-              key={index}
-              className="mb-4 p-4 rounded-lg shadow-md bg-base-200 border border-gray-300 dark:border-gray-700"
-            >
-              <h3 className="text-xl font-bold">{exp.jobTitle}</h3>
-              <p className="text-gray-500">
+            <div key={index} className="mt-3">
+              <div className="flex justify-between">
+                <h3 className="font-bold">{exp.jobTitle}</h3>
+                <p className="text-gray-600 text-sm">{exp.duration}</p>
+              </div>
+              <p className="text-gray-700 text-sm italic">
                 {exp.company} | {exp.location}
               </p>
-              <p className="text-gray-400">{exp.duration}</p>
-              <p className="mt-2 text-gray-600 dark:text-gray-300">
-                {exp.responsibility}
-              </p>
+              <ul className="list-disc pl-5 mt-1 text-sm text-gray-700 space-y-1">
+                {exp.responsibility.split('\n').map((item, i) => (
+                  <li key={i}>{item}</li>
+                ))}
+              </ul>
             </div>
           ))}
         </section>
-
-        <div className="divider"></div>
 
         {/* Education Section */}
-        <section>
-          <h2 className="text-2xl font-semibold text-secondary">Education</h2>
+        <section className="mt-4">
+          <h2 className="text-xl font-semibold uppercase border-b border-gray-300 pb-1">
+            Education
+          </h2>
           {data.education.map((edu, index) => (
-            <div
-              key={index}
-              className="mb-4 p-4 rounded-lg shadow-md bg-base-200 border border-gray-300 dark:border-gray-700"
-            >
-              <h3 className="text-xl font-bold">{edu.degree}</h3>
-              <p className="text-gray-500">
+            <div key={index} className="mt-3">
+              <div className="flex justify-between">
+                <h3 className="font-bold">{edu.degree}</h3>
+                <p className="text-gray-600 text-sm">{edu.graduationYear}</p>
+              </div>
+              <p className="text-gray-700 text-sm">
                 {edu.university}, {edu.location}
               </p>
-              <p className="text-gray-400">
-                🎓 Graduation Year: {edu.graduationYear}
-              </p>
             </div>
           ))}
         </section>
-
-        <div className="divider"></div>
-
-        {/* Certifications Section */}
-        <section>
-          <h2 className="text-2xl font-semibold text-secondary">
-            Certifications
-          </h2>
-          {data.certifications.map((cert, index) => (
-            <div
-              key={index}
-              className="mb-4 p-4 rounded-lg shadow-md bg-base-200 border border-gray-300 dark:border-gray-700"
-            >
-              <h3 className="text-xl font-bold">{cert.title}</h3>
-              <p className="text-gray-500">
-                {cert.issuingOrganization} - {cert.year}
-              </p>
-            </div>
-          ))}
-        </section>
-
-        <div className="divider"></div>
 
         {/* Projects Section */}
-        <section>
-          <h2 className="text-2xl font-semibold text-secondary">Projects</h2>
+        <section className="mt-4">
+          <h2 className="text-xl font-semibold uppercase border-b border-gray-300 pb-1">
+            Projects
+          </h2>
           {data.projects.map((proj, index) => (
-            <div
-              key={index}
-              className="mb-4 p-4 rounded-lg shadow-md bg-base-200 border border-gray-300 dark:border-gray-700"
-            >
-              <h3 className="text-xl font-bold">{proj.title}</h3>
-              <p className="text-gray-600 dark:text-gray-300">
+            <div key={index} className="mt-3">
+              <h3 className="font-bold">{proj.title}</h3>
+              <p className="text-gray-700 text-sm mt-1">
                 {proj.description}
               </p>
-              <p className="text-gray-500">
-                🛠 Technologies: {proj.technologiesUsed.join(", ")}
+              <p className="text-gray-600 text-xs mt-1">
+                <span className="font-medium">Technologies:</span> {proj.technologiesUsed}
               </p>
               {proj.githubLink && (
                 <a
                   href={proj.githubLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-500 hover:underline"
+                  className="text-blue-600 hover:underline text-xs"
                 >
-                  🔗 GitHub Link
+                  View on GitHub
                 </a>
               )}
             </div>
           ))}
         </section>
 
-        <div className="divider"></div>
-
-        {/* Achievements Section */}
-        <section>
-          <h2 className="text-2xl font-semibold text-secondary">
-            Achievements
-          </h2>
-          {data.achievements.map((ach, index) => (
-            <div
-              key={index}
-              className="mb-4 p-4 rounded-lg shadow-md bg-base-200 border border-gray-300 dark:border-gray-700"
-            >
-              <h3 className="text-xl font-bold">{ach.title}</h3>
-              <p className="text-gray-500">{ach.year}</p>
-              <p className="text-gray-600 dark:text-gray-300">
-                {ach.extraInformation}
-              </p>
-            </div>
-          ))}
-        </section>
-
-        <div className="divider"></div>
+        {/* Certifications Section */}
+        {data.certifications.length > 0 && (
+          <section className="mt-4">
+            <h2 className="text-xl font-semibold uppercase border-b border-gray-300 pb-1">
+              Certifications
+            </h2>
+            {data.certifications.map((cert, index) => (
+              <div key={index} className="mt-3">
+                <div className="flex justify-between">
+                  <h3 className="font-bold">{cert.title}</h3>
+                  <p className="text-gray-600 text-sm">{cert.year}</p>
+                </div>
+                <p className="text-gray-700 text-sm">
+                  {cert.issuingOrganization}
+                </p>
+              </div>
+            ))}
+          </section>
+        )}
 
         {/* Languages Section */}
-        <section>
-          <h2 className="text-2xl font-semibold text-secondary">Languages</h2>
-          <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300">
-            {data.languages.map((lang, index) => (
-              <li key={index}>{lang.name}</li>
-            ))}
-          </ul>
-        </section>
-
-        <div className="divider"></div>
-
-        {/* Interests Section */}
-        <section>
-          <h2 className="text-2xl font-semibold text-secondary">Interests</h2>
-          <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300">
-            {data.interests.map((interest, index) => (
-              <li key={index}>{interest.name}</li>
-            ))}
-          </ul>
-        </section>
+        {data.languages.length > 0 && (
+          <section className="mt-4">
+            <h2 className="text-xl font-semibold uppercase border-b border-gray-300 pb-1">
+              Languages
+            </h2>
+            <div className="flex flex-wrap gap-2 mt-2">
+              {data.languages.map((lang, index) => (
+                <div
+                  key={index}
+                  className="inline-block bg-gray-100 text-gray-800 rounded px-2 py-1 text-xs font-medium whitespace-nowrap"
+                >
+                  {lang.name}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
 
-      <section className="flex justify-center mt-4 ">
-        <div onClick={handleDownloadPdf} className="btn btn-primary">
-          Print
-        </div>
+      <section className="flex justify-center mt-4">
+        <button 
+          onClick={handleDownloadPdf} 
+          className="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-700 transition-colors"
+        >
+          Download PDF
+        </button>
       </section>
     </>
   );

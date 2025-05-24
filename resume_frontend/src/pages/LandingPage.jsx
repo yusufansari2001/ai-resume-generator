@@ -4,60 +4,52 @@ import { Link } from "react-router";
 const LandingPage = () => {
   return (
     <div className="bg-base-100">
-      {/* Hero Section */}
-      {/* Hero Section */}
-      <section className="hero min-h-screen bg-base-200">
-        <div className="hero-content text-center">
-          <div className="max-w-2xl">
-            <h1 className="text-5xl font-bold">
-              Create Your Perfect Resume with AI
-            </h1>
-            <p className="py-6 text-lg">
-              Build a professional resume in minutes. Just describe yourself,
-              and our AI will do the rest!
-            </p>
-            <Link to={"/generate-resume"} className="btn btn-primary">
-              Get Started
-            </Link>
-          </div>
+      {/* Hero + Features Section */}
+      <section className="min-h-screen bg-base-200 flex flex-col lg:flex-row items-center justify-between px-6 lg:px-16 py-12 gap-8">
+        {/* Hero Content - Left Side */}
+        <div className="w-full lg:w-3/5 text-center lg:text-left">
+          <h1 className="text-5xl font-bold">
+            Create Your Perfect Resume with AI
+          </h1>
+          <p className="py-6 text-lg">
+            Build a professional resume in minutes. Just describe yourself,
+            and our AI will do the rest!
+          </p>
+          <Link to={"/generate-resume"} className="btn btn-primary">
+            Get Started
+          </Link>
         </div>
-      </section>
-      {/* Features Section */}
-      <section className="py-20 bg-base-100">
-        <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12">Features</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Feature 1 */}
-            <div className="card bg-base-200 shadow-xl">
-              <div className="card-body items-center text-center">
-                <div className="text-4xl mb-4">🚀</div>
-                <h3 className="card-title">AI-Powered</h3>
-                <p>
-                  Our AI analyzes your input and generates a tailored resume for
-                  you.
-                </p>
-              </div>
+
+        {/* Features - Right Side */}
+        <div className="w-full lg:w-2/5 grid grid-cols-1 gap-6">
+          {/* Feature 1 */}
+          <div className="card bg-base-100 shadow-xl">
+            <div className="card-body items-center text-center">
+              <div className="text-4xl mb-2">🚀</div>
+              <h3 className="card-title">AI-Powered</h3>
+              <p>
+                Our AI analyzes your input and generates a tailored resume for you.
+              </p>
             </div>
-            {/* Feature 2 */}
-            <div className="card bg-base-200 shadow-xl">
-              <div className="card-body items-center text-center">
-                <div className="text-4xl mb-4">📄</div>
-                <h3 className="card-title">Multiple Templates</h3>
-                <p>
-                  Choose from a variety of professionally designed resume
-                  templates.
-                </p>
-              </div>
+          </div>
+          {/* Feature 2 */}
+          <div className="card bg-base-100 shadow-xl">
+            <div className="card-body items-center text-center">
+              <div className="text-4xl mb-2">📄</div>
+              <h3 className="card-title">Multiple Templates</h3>
+              <p>
+                Choose from a variety of professionally designed resume templates.
+              </p>
             </div>
-            {/* Feature 3 */}
-            <div className="card bg-base-200 shadow-xl">
-              <div className="card-body items-center text-center">
-                <div className="text-4xl mb-4">💼</div>
-                <h3 className="card-title">Job-Specific Resumes</h3>
-                <p>
-                  Optimize your resume for specific job roles and industries.
-                </p>
-              </div>
+          </div>
+          {/* Feature 3 */}
+          <div className="card bg-base-100 shadow-xl">
+            <div className="card-body items-center text-center">
+              <div className="text-4xl mb-2">💼</div>
+              <h3 className="card-title">Job-Specific Resumes</h3>
+              <p>
+                Optimize your resume for specific job roles and industries.
+              </p>
             </div>
           </div>
         </div>

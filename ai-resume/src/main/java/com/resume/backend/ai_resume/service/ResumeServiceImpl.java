@@ -1,6 +1,7 @@
 package com.resume.backend.ai_resume.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -15,8 +16,15 @@ import java.util.*;
 public class ResumeServiceImpl implements ResumeService {
 
     private final RestTemplate restTemplate = new RestTemplate();
-    private static final String API_URL = "https://openrouter.ai/api/v1/chat/completions";
-    private static final String API_KEY = "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";
+
+    @Value("${openrouter.api.url}")
+    private String apiUrl;
+
+    @Value("${openrouter.api.key}")
+    private String apiKey;
+
+    @Value("${openrouter.api.model}")
+    private String modelName;
 
     @Override
     public Map<String, Object> generateResumeResponse(String userResumeDescription) throws IOException {
@@ -32,19 +40,19 @@ public class ResumeServiceImpl implements ResumeService {
     private String callLLMApi(String promptContent) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Authorization", "Bearer " + API_KEY);
+        headers.set("Authorization", "Bearer " + apiKey);
         headers.set("HTTP-Referer", "http://localhost"); // required by OpenRouter
         headers.set("X-Title", "ResumeApp");             // name your app
 
         Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("model", "mistralai/mistral-7b-instruct");
+        requestBody.put("model", modelName);
         requestBody.put("messages", List.of(
                 Map.of("role", "user", "content", promptContent)
         ));
         requestBody.put("temperature", 0.7);
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
-        ResponseEntity<Map> response = restTemplate.postForEntity(API_URL, entity, Map.class);
+        ResponseEntity<Map> response = restTemplate.postForEntity(apiUrl, entity, Map.class);
 
         try {
             List<Map<String, Object>> choices = (List<Map<String, Object>>) response.getBody().get("choices");
@@ -56,19 +64,19 @@ public class ResumeServiceImpl implements ResumeService {
         }
     }
 
-    String loadPromptFromFile(String filename) throws IOException {
+    private String loadPromptFromFile(String filename) throws IOException {
         Path path = new ClassPathResource(filename).getFile().toPath();
         return Files.readString(path);
     }
 
-    String putValuesToTemplate(String template, Map<String, String> values) {
+    private String putValuesToTemplate(String template, Map<String, String> values) {
         for (Map.Entry<String, String> entry : values.entrySet()) {
             template = template.replace("{{" + entry.getKey() + "}}", entry.getValue());
         }
         return template;
     }
 
-    public static Map<String, Object> parseMultipleResponses(String response) {
+    private static Map<String, Object> parseMultipleResponses(String response) {
         Map<String, Object> jsonResponse = new HashMap<>();
 
         int thinkStart = response.indexOf("<think>") + 7;

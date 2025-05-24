@@ -10,7 +10,13 @@ import Resume from "../components/Resume";
 const GenerateResume = () => {
   const [data, setData] = useState({
     personalInformation: {
-      fullName: "Durgesh Kumar Tiwari",
+      fullName: "",
+      email: "",
+      phoneNumber: "",
+      location: "",
+      linkedin: "",
+      gitHub: "",
+      portfolio: "",
     },
     summary: "",
     skills: [],
@@ -19,6 +25,7 @@ const GenerateResume = () => {
     certifications: [],
     projects: [],
     languages: [],
+    achievements: [],
     interests: [],
   });
 
@@ -40,11 +47,12 @@ const GenerateResume = () => {
   const languagesFields = useFieldArray({ control, name: "languages" });
   const interestsFields = useFieldArray({ control, name: "interests" });
   const skillsFields = useFieldArray({ control, name: "skills" });
+  const achievementsFields = useFieldArray({ control, name: "achievements" });
 
   //handle form submit
-  const onSubmit = (data) => {
-    console.log("Form Data:", data);
-    setData({ ...data });
+  const onSubmit = (formData) => {
+    console.log("Form Data:", formData);
+    setData({ ...formData });
 
     setShowFormUI(false);
     setShowPromptInput(false);
@@ -55,25 +63,37 @@ const GenerateResume = () => {
   const [loading, setLoading] = useState(false);
 
   const handleGenerate = async () => {
-    console.log(description);
-    // server call to get resume
+    if (!description.trim()) {
+      toast.error("Please enter a description!");
+      return;
+    }
+
+    console.log("Description:", description);
 
     try {
       setLoading(true);
       const responseData = await generateResume(description);
-      console.log(responseData);
+      
+      // Debug: Check what we're getting from backend
+      console.log("Backend response:", JSON.stringify(responseData, null, 2));
+      
+      // Reset form with new data
       reset(responseData.data);
+      
+      // Update local state
+      setData(responseData.data);
 
       toast.success("Resume Generated Successfully!", {
         duration: 3000,
         position: "top-center",
       });
+      
       setShowFormUI(true);
       setShowPromptInput(false);
       setShowResumeUI(false);
     } catch (error) {
-      console.log(error);
-      toast.error("Error Generating Resume!");
+      console.error("Error generating resume:", error);
+      toast.error("Error Generating Resume! Please try again.");
     } finally {
       setLoading(false);
       setDescription("");
@@ -85,7 +105,7 @@ const GenerateResume = () => {
   };
 
   const renderInput = (name, label, type = "text") => (
-    <div className="form-control w-full  mb-4">
+    <div className="form-control w-full mb-4">
       <label className="label">
         <span className="label-text text-base-content">{label}</span>
       </label>
@@ -93,9 +113,11 @@ const GenerateResume = () => {
         type={type}
         {...register(name)}
         className="input input-bordered rounded-xl w-full bg-base-100 text-base-content"
+        placeholder={`Enter your ${label.toLowerCase()}`}
       />
     </div>
   );
+
   const renderFieldArray = (fields, label, name, keys) => {
     return (
       <div className="form-control w-full mb-4">
@@ -104,7 +126,6 @@ const GenerateResume = () => {
           <div key={field.id} className="p-4 rounded-lg mb-4 bg-base-100">
             {keys.map((key) => (
               <div key={key}>
-                {console.log(`${name}`)}
                 {renderInput(`${name}.${index}.${key}`, key)}
               </div>
             ))}
@@ -163,6 +184,7 @@ const GenerateResume = () => {
               {...register("summary")}
               className="textarea textarea-bordered w-full bg-base-100 text-base-content"
               rows={4}
+              placeholder="Write a brief professional summary..."
             ></textarea>
 
             {renderFieldArray(skillsFields, "Skills", "skills", [
@@ -194,22 +216,21 @@ const GenerateResume = () => {
               "technologiesUsed",
               "githubLink",
             ])}
+            {renderFieldArray(achievementsFields, "Achievements", "achievements", [
+              "title",
+              "year",
+              "extraInformation",
+            ])}
 
-            <div className="flex gap-3 mt-16  p-4 rounded-xl ">
-              <div className="flex-1">
-                {renderFieldArray(languagesFields, "Languages", "languages", [
-                  "name",
-                ])}
-              </div>
-              <div className="flex-1">
-                {renderFieldArray(interestsFields, "Interests", "interests", [
-                  "name",
-                ])}
-              </div>
-            </div>
+            {renderFieldArray(languagesFields, "Languages", "languages", [
+              "name",
+            ])}
+            {renderFieldArray(interestsFields, "Interests", "interests", [
+              "name",
+            ])}
 
             <button type="submit" className="btn btn-primary w-full">
-              Submit
+              Generate Final Resume
             </button>
           </form>
         </div>
@@ -230,13 +251,13 @@ const GenerateResume = () => {
         <textarea
           disabled={loading}
           className="textarea textarea-bordered w-full h-48 mb-6 resize-none"
-          placeholder="Type your description here..."
+          placeholder="Type your description here... (e.g., I am a software developer with 3 years of experience in React and Node.js...)"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         ></textarea>
         <div className="flex justify-center gap-4">
           <button
-            disabled={loading}
+            disabled={loading || !description.trim()}
             onClick={handleGenerate}
             className="btn btn-primary flex items-center gap-2"
           >
@@ -254,6 +275,7 @@ const GenerateResume = () => {
       </div>
     );
   }
+
   function showResume() {
     return (
       <div>
@@ -278,7 +300,7 @@ const GenerateResume = () => {
             }}
             className="btn btn-success"
           >
-            Edit
+            Edit Resume
           </div>
         </div>
       </div>

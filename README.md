@@ -56,6 +56,14 @@ The project currently uses remote API-based models for faster response times and
 
 For users who prefer running models locally, the project also supports Ollama integration.
 
+#### Maven dependency:
+```yaml
+xml<dependency>
+    <groupId>org.springframework.ai</groupId>
+    <artifactId>spring-ai-starter-model-ollama</artifactId>
+</dependency>
+```
+
 #### Setup Ollama:
 ```bash
 # Install Ollama

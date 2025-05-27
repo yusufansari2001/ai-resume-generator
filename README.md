@@ -16,7 +16,7 @@ A web-based application that leverages AI to **generate professional resumes** a
 ##  UI Snapshots
 > ![image](https://github.com/user-attachments/assets/b79285ac-14a4-4970-97f1-7ca8a4ee8e6f)
 ![image](https://github.com/user-attachments/assets/01249c70-c345-42ce-9bd9-d86894042d58)
-![image](https://github.com/user-attachments/assets/66b0d5a3-d6c1-425d-ac70-ed52414ea7ca)
+![image](https://github.com/user-attachments/assets/59fc50d4-1ab5-4102-841f-d9ed3a82785d)
 ![image](https://github.com/user-attachments/assets/de359757-154b-4def-b92a-34a45120f0cf)
 
 ---

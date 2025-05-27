@@ -82,20 +82,23 @@ spring.ai.ollama.chat.options.temperature=0.7
 public class LocalAIResumeService {
     
     @Autowired
-    private OllamaChatModel chatModel;
+    private ChatClient chatClient;
     
     public String generateResume(String prompt) {
-        ChatResponse response = chatModel.call(
-            new Prompt(prompt)
-        );
-        return response.getResult().getOutput().getContent();
+        return chatClient.prompt()
+                .user(prompt)
+                .call()
+                .content();
     }
     
     public double calculateATSScore(String resumeData) {
         String atsPrompt = "Analyze this resume for ATS compatibility and provide a score out of 100: " + resumeData;
-        ChatResponse response = chatModel.call(new Prompt(atsPrompt));
+        String response = chatClient.prompt()
+                .user(atsPrompt)
+                .call()
+                .content();
         // Parse the response to extract numerical score
-        return parseATSScore(response.getResult().getOutput().getContent());
+        return parseATSScore(response);
     }
     
     private double parseATSScore(String response) {

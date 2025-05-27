@@ -1,11 +1,9 @@
 # AI Resume Generator 
-
 A web-based application that leverages AI to **generate professional resumes** and calculate **ATS (Applicant Tracking System) scores** from user input. Built using **Spring Boot (backend)** and **React with Tailwind CSS (frontend)**, the project integrates with local and external LLMs for intelligent content generation and optimization feedback.
 
 ---
 
 ##  Features
-
 - ✅ AI-powered resume generation
 - ✅ ATS (Applicant Tracking System) score calculation
 - ✅ Interactive frontend with modern UI
@@ -16,20 +14,14 @@ A web-based application that leverages AI to **generate professional resumes** a
 ---
 
 ##  UI Snapshots
-
 > ![image](https://github.com/user-attachments/assets/b79285ac-14a4-4970-97f1-7ca8a4ee8e6f)
 ![image](https://github.com/user-attachments/assets/01249c70-c345-42ce-9bd9-d86894042d58)
 ![image](https://github.com/user-attachments/assets/66b0d5a3-d6c1-425d-ac70-ed52414ea7ca)
 ![image](https://github.com/user-attachments/assets/de359757-154b-4def-b92a-34a45120f0cf)
 
-
-
-
-
-
 ---
 
-##  Tech Stack
+## Tech Stack
 
 ### Backend (Spring Boot + Spring AI)
 - Java 17+
@@ -53,20 +45,64 @@ A web-based application that leverages AI to **generate professional resumes** a
 
 ---
 
-##  AI Model Integration
+## 🤖 AI Model Integration
 
-### ForlLocal LLM with Ollama
+This project supports **two different approaches** for AI model integration, allowing flexibility between local and remote LLM usage:
 
-Used [Ollama](https://ollama.com/) to run the **DeepSeek** model locally:
-This will start a local server at http://localhost:11434.
+### 1. Remote API-based LLMs (Currently Used)
+The project currently uses remote API-based models for faster response times and better scalability. The implementation details are available in the project source code.
 
+### 2. Local LLM with Ollama (Alternative Option)
+
+For users who prefer running models locally, the project also supports Ollama integration.
+
+#### Setup Ollama:
 ```bash
+# Install Ollama
+curl -fsSL https://ollama.com/install.sh | sh
+
+# Pull and run DeepSeek model
+ollama pull deepseek-coder
+
+# Start the model (runs on http://localhost:11434)
 ollama run deepseek-coder
+```
 
+#### Configuration:
+```yaml
+# application.properties
+spring.ai.ollama.base-url=http://localhost:11434
+spring.ai.ollama.chat.options.model=deepseek-coder
+spring.ai.ollama.chat.options.temperature=0.7
+```
+
+#### Implementation:
 ```java
-@Autowired
-private ChatClient chatClient;
-
-public String generateResume(String prompt) {
-    return chatClient.call(prompt).getResult().getOutput();
+@Service
+public class LocalAIResumeService {
+    
+    @Autowired
+    private OllamaChatModel chatModel;
+    
+    public String generateResume(String prompt) {
+        ChatResponse response = chatModel.call(
+            new Prompt(prompt)
+        );
+        return response.getResult().getOutput().getContent();
+    }
+    
+    public double calculateATSScore(String resumeData) {
+        String atsPrompt = "Analyze this resume for ATS compatibility and provide a score out of 100: " + resumeData;
+        ChatResponse response = chatModel.call(new Prompt(atsPrompt));
+        // Parse the response to extract numerical score
+        return parseATSScore(response.getResult().getOutput().getContent());
+    }
+    
+    private double parseATSScore(String response) {
+        // Implementation to extract numerical score from response
+        // This would parse the model's response to find the score
+        return 75.0; // Placeholder
+    }
 }
+```
+

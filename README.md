@@ -1,10 +1,10 @@
-# AI Resume Generator 🧠📄
+# AI Resume Generator 
 
 A web-based application that leverages AI to **generate professional resumes** and calculate **ATS (Applicant Tracking System) scores** from user input. Built using **Spring Boot (backend)** and **React with Tailwind CSS (frontend)**, the project integrates with local and external LLMs for intelligent content generation and optimization feedback.
 
 ---
 
-## 🚀 Features
+##  Features
 
 - ✅ AI-powered resume generation
 - ✅ ATS (Applicant Tracking System) score calculation
@@ -15,7 +15,7 @@ A web-based application that leverages AI to **generate professional resumes** a
 
 ---
 
-## 📸 UI Snapshots
+##  UI Snapshots
 
 > ![image](https://github.com/user-attachments/assets/b79285ac-14a4-4970-97f1-7ca8a4ee8e6f)
 ![image](https://github.com/user-attachments/assets/01249c70-c345-42ce-9bd9-d86894042d58)
@@ -29,7 +29,7 @@ A web-based application that leverages AI to **generate professional resumes** a
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 ### Backend (Spring Boot + Spring AI)
 - Java 17+
@@ -53,7 +53,7 @@ A web-based application that leverages AI to **generate professional resumes** a
 
 ---
 
-## 🧠 AI Model Integration
+##  AI Model Integration
 
 ### Phase 1: Local LLM with Ollama
 

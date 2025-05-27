@@ -55,9 +55,18 @@ A web-based application that leverages AI to **generate professional resumes** a
 
 ##  AI Model Integration
 
-### Phase 1: Local LLM with Ollama
+### ForlLocal LLM with Ollama
 
 Used [Ollama](https://ollama.com/) to run the **DeepSeek** model locally:
+This will start a local server at http://localhost:11434.
 
 ```bash
 ollama run deepseek-coder
+
+```java
+@Autowired
+private ChatClient chatClient;
+
+public String generateResume(String prompt) {
+    return chatClient.call(prompt).getResult().getOutput();
+}

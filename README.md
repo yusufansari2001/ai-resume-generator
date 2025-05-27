@@ -22,9 +22,6 @@ A web-based application that leverages AI to **generate professional resumes** a
 
 
 
-**Example Placeholder**  
-`![Landing Page](images/landing-page.png)`  
-`![Resume Output](images/resume-output.png)`
 
 ---
 

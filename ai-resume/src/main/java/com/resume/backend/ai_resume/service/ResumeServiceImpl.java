@@ -37,6 +37,30 @@ public class ResumeServiceImpl implements ResumeService {
         return parseMultipleResponses(response);
     }
 
+    @Override
+    public double calculateAtsScore(String resumeJson) throws IOException {
+        String promptString = loadPromptFromFile("ats_prompt.txt");
+        String promptContent = putValuesToTemplate(promptString, Map.of(
+                "resumeJson", resumeJson
+        ));
+
+        String response = callLLMApi(promptContent);
+        double ats = parseAtsScoreResponse(response);
+        return ats;
+    }
+
+    private double parseAtsScoreResponse(String response) {
+        try {
+            // Look for a simple numeric response or parse from JSON
+            // This depends on how your AI responds
+            String scoreString = response.replaceAll("[^0-9.]", "").trim();
+            return Double.parseDouble(scoreString);
+        } catch (Exception e) {
+            System.err.println("Error parsing ATS score: " + e.getMessage());
+            return 0.0;
+        }
+    }
+
     private String callLLMApi(String promptContent) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

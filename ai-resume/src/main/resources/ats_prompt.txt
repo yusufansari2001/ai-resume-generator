@@ -1,0 +1,5 @@
+Analyze the following resume JSON and calculate an ATS (Applicant Tracking System) compatibility score between 0 and 100.
+Return only the numeric score with no additional text or formatting.
+
+Resume JSON:
+{{resumeJson}}

@@ -2,10 +2,13 @@ import React from "react";
 import { FaGithub, FaLinkedin, FaPhone, FaEnvelope } from "react-icons/fa";
 import { toPng } from "html-to-image";
 import { jsPDF } from "jspdf";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 const Resume = ({ data }) => {
   const resumeRef = useRef(null);
+  const [atsScore, setAtsScore] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleDownloadPdf = () => {
     toPng(resumeRef.current, { quality: 1.0 })
@@ -17,6 +20,40 @@ const Resume = ({ data }) => {
       .catch((err) => {
         console.error("Error generating PDF", err);
       });
+  };
+
+  const handleCheckATSScore = async () => {
+    setIsLoading(true);
+    setError(null);
+    setAtsScore(null);
+
+    try {
+      const requestPayload = {
+        think: null,
+        data: data
+      };
+
+      const response = await fetch("http://localhost:8080/api/v1/resume/calculate-ats-score", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestPayload),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log("ATS Score result:", result);
+      setAtsScore(result.atsScore);
+    } catch (error) {
+      console.error("Error fetching ATS score:", error);
+      setError("Failed to calculate ATS score. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -209,14 +246,49 @@ const Resume = ({ data }) => {
         )}
       </div>
 
-      <section className="flex justify-center mt-4">
-        <button 
-          onClick={handleDownloadPdf} 
+      <section className="flex justify-center mt-4 space-x-4">
+        <button
+          onClick={handleDownloadPdf}
           className="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-700 transition-colors"
         >
           Download PDF
         </button>
+
+        <button
+          onClick={handleCheckATSScore}
+          disabled={isLoading}
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isLoading ? "Calculating..." : "ATS Score"}
+        </button>
       </section>
+
+      {/* ATS Score Display Section */}
+      {(atsScore !== null || error) && (
+        <section className="flex justify-center mt-4">
+          <div className="bg-gray-50 border rounded-lg p-4 max-w-md w-full text-center">
+            {error ? (
+              <div className="text-red-600">
+                <h3 className="font-semibold text-lg">Error</h3>
+                <p className="text-sm mt-1">{error}</p>
+              </div>
+            ) : (
+              <div className="text-gray-800">
+                <h3 className="font-semibold text-lg">ATS Score</h3>
+                <div className="mt-2">
+                  <span className="text-3xl font-bold text-blue-600">{atsScore}</span>
+                  <span className="text-lg text-gray-600">/100</span>
+                </div>
+                <p className="text-sm text-gray-600 mt-2">
+                  {atsScore >= 80 ? "Excellent ATS compatibility!" : 
+                   atsScore >= 60 ? "Good ATS compatibility." : 
+                   "Consider optimizing for better ATS compatibility."}
+                </p>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
     </>
   );
 };

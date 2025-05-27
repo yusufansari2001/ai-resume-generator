@@ -32,5 +32,13 @@ public class ResumeController {
 
     }
 
+    @PostMapping("/calculate-ats-score")
+    public ResponseEntity<Map<String, Double>> calculateAtsScore(
+            @RequestBody String resumeJson
+    ) throws IOException {
+        double atsScore = resumeService.calculateAtsScore(resumeJson);
+        return new ResponseEntity<>(Map.of("atsScore", atsScore), HttpStatus.OK);
+    }
+
 
 }
